@@ -2,7 +2,7 @@
 .env
 __pycache__/
 *.pyc
-.streamlit/secrets.toml
+streamlit/secrets.toml
 
 data/private/
 Cheatsheet

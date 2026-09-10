@@ -1,7 +1,61 @@
+import os
+import hmac
 import streamlit as st
+from dotenv import load_dotenv
 
 from company_matcher import match_company
 from rag import ask_rag
+
+load_dotenv()
+
+
+def get_setting(name):
+    try:
+        return st.secrets.get(name, os.getenv(name, ""))
+    except Exception:
+        return os.getenv(name, "")
+
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+
+def check_access_code():
+    entered_code = st.session_state.get("access_code", "")
+    expected_code = get_setting("APP_ACCESS_CODE")
+
+    if expected_code and hmac.compare_digest(
+        entered_code,
+        expected_code
+    ):
+        st.session_state.authenticated = True
+        st.session_state.pop("access_code", None)
+    else:
+        st.error("Incorrect access code.")
+
+
+if not st.session_state.authenticated:
+    st.title("AI Work Application Assistant")
+
+    st.write(
+        "This assistant provides additional information about my "
+        "experience, skills, projects, and suitability for the position."
+    )
+
+    st.text_input(
+        "Access code",
+        type="password",
+        key="access_code",
+        placeholder="Enter access code"
+    )
+
+    st.button(
+        "Continue",
+        on_click=check_access_code,
+        type="primary"
+    )
+
+    st.stop()
 
 
 def is_greeting(message):
