@@ -45,16 +45,16 @@ fields = [
     ),
 
     SimpleField(
-        name="product",
+        name="company_id",
         type=SearchFieldDataType.String,
         filterable=True
     ),
 
     SimpleField(
-        name="category",
+        name="document_type",
         type=SearchFieldDataType.String,
         filterable=True
-    ),
+    ),  
 
     SimpleField(
         name="source",

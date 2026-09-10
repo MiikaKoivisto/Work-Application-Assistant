@@ -1,9 +1,27 @@
 import streamlit as st
+
+from company_matcher import match_company
 from rag import ask_rag
 
 
+def is_greeting(message):
+    greeting_words = {
+        "hi",
+        "hello",
+        "hey",
+        "hiya",
+        "greetings",
+        "good morning",
+        "good afternoon",
+        "good evening"
+    }
+
+    normalized = message.strip().lower().rstrip("!.,?")
+    return normalized in greeting_words
+
+
 st.set_page_config(
-    page_title="Microsoft 365 Assistant",
+    page_title="AI Work Application Assistant",
     page_icon="🤖",
     layout="wide"
 )
@@ -16,8 +34,81 @@ st.set_page_config(
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-if "show_debug" not in st.session_state:
-    st.session_state.show_debug = False
+if "recruiter_name" not in st.session_state:
+    st.session_state.recruiter_name = None
+
+if "company_name" not in st.session_state:
+    st.session_state.company_name = None
+
+if "company_id" not in st.session_state:
+    st.session_state.company_id = None
+
+if "authenticated_company" not in st.session_state:
+    st.session_state.authenticated_company = False
+
+
+# -----------------------------
+# ONBOARDING SCREEN
+# -----------------------------
+
+if not st.session_state.authenticated_company:
+
+    st.title("👋 Welcome")
+
+    st.subheader("AI Work Application Assistant")
+
+    st.markdown(
+        """
+        This assistant provides additional information about my professional
+        experience, technical skills, projects, and suitability for the
+        position I have applied for.
+
+        To get started, please introduce yourself below.
+        """
+    )
+
+    st.divider()
+
+    recruiter_name = st.text_input(
+        "Your first name"
+    )
+
+    company_name = st.text_input(
+        "Company"
+    )
+
+    if st.button(
+        "Continue",
+        type="primary",
+        use_container_width=True
+    ):
+        recruiter_name = recruiter_name.strip()
+        company_name = company_name.strip()
+
+        if not recruiter_name:
+            st.warning("Please enter your first name.")
+
+        elif not company_name:
+            st.warning("Please enter your company.")
+
+        else:
+            company_id = match_company(company_name)
+
+        if company_id is None:
+                st.error(
+                f"Sorry, this assistant doesn't currently contain information "
+                f"about an open position at **{company_name}**. "
+                f"Please check the company name and try again."
+    )
+        else:
+                st.session_state.recruiter_name = recruiter_name
+                st.session_state.company_name = company_name
+                st.session_state.company_id = company_id
+                st.session_state.authenticated_company = True
+
+                st.rerun()
+
+    st.stop()
 
 
 # -----------------------------
@@ -25,7 +116,22 @@ if "show_debug" not in st.session_state:
 # -----------------------------
 
 with st.sidebar:
-    st.title("🤖 AI support assistant built with:")
+
+    st.title("🤖 Application Assistant")
+
+    st.markdown(
+        f"""
+        **Recruiter:**  
+        {st.session_state.recruiter_name}
+
+        **Company:**  
+        {st.session_state.company_name}
+        """
+    )
+
+    st.divider()
+
+    st.subheader("Technology")
 
     st.markdown(
         """
@@ -33,30 +139,17 @@ with st.sidebar:
         - Azure AI Search
         - Hybrid retrieval
         - Vector embeddings
+        - Metadata filtering
         - Streamlit
         """
     )
 
     st.divider()
 
-    st.subheader("Supported products")
-
-    st.markdown(
-        """
-        - Microsoft Teams
-        - Outlook
-        - OneDrive
-        """
-    )
-
-    st.divider()
-
-    st.session_state.show_debug = st.toggle(
-        "Show RAG debug information",
-        value=st.session_state.show_debug
-    )
-
-    if st.button("Clear conversation"):
+    if st.button(
+        "Clear conversation",
+        use_container_width=True
+    ):
         st.session_state.messages = []
         st.rerun()
 
@@ -65,17 +158,24 @@ with st.sidebar:
 # HEADER
 # -----------------------------
 
-st.title("Microsoft 365 Support Assistant")
+st.title("AI Work Application Assistant")
 
 st.caption(
-    "Ask questions about Teams, Outlook and OneDrive. "
-    "Answers are grounded in Microsoft Support documentation."
+    f"Welcome, {st.session_state.recruiter_name}. "
+    "Ask about Miika's experience, skills, projects, "
+    "or suitability for the position."
 )
+
+st.divider()
 
 
 # -----------------------------
 # EXAMPLE QUESTIONS
 # -----------------------------
+
+example_1 = False
+example_2 = False
+example_3 = False
 
 if not st.session_state.messages:
 
@@ -85,108 +185,184 @@ if not st.session_state.messages:
 
     with col1:
         example_1 = st.button(
-            "🖥️ How do I share my screen in Teams?",
-            use_container_width=True
+            "🏢 Tell me about the company",
+            use_container_width=True,
+            key="example_company"
         )
 
     with col2:
         example_2 = st.button(
-            "📧 How do I set an automatic reply?",
-            use_container_width=True
+            "💼 Tell me about the position",
+            use_container_width=True,
+            key="example_position"
         )
 
     with col3:
         example_3 = st.button(
-            "☁️ How can I recover a deleted OneDrive file?",
-            use_container_width=True
+            "🎯 Tell me how Miika fits the position",
+            use_container_width=True,
+            key="example_fit"
         )
-
-else:
-    example_1 = False
-    example_2 = False
-    example_3 = False
 
 
 # -----------------------------
 # DISPLAY CHAT HISTORY
 # -----------------------------
 
-for message in st.session_state.messages:
+chat_container = st.container(
+    height=600,
+    border=False
+)
 
-    with st.chat_message(message["role"]):
+with chat_container:
 
-        st.markdown(message["content"])
+    if not st.session_state.messages:
+        st.caption(
+            "Choose an example above or ask your own question below to start the conversation."
+        )
 
-        if message["role"] == "assistant":
+    for message in st.session_state.messages:
 
-            sources = message.get("sources", [])
+        with st.chat_message(message["role"]):
 
-            if sources:
-                with st.expander("Sources"):
+            st.markdown(message["content"])
 
-                    for source in sources:
-                        st.markdown(
-                            f"**{source['product']} — "
-                            f"{source['title']}**"
-                        )
+            if message["role"] == "assistant":
 
-                        st.markdown(
-                            f"[Open Microsoft Support article]"
-                            f"({source['url']})"
-                        )
+                citations = message.get("citations", [])
 
-            if (
-                st.session_state.show_debug
-                and message.get("retrieved_chunks")
-            ):
+                if citations:
+                    with st.expander("Evidence"):
+                        for citation in citations:
+                            st.markdown(
+                                f"### [{citation['citation_number']}] "
+                                f"{citation['title']}"
+                            )
 
-                with st.expander(
-                    "RAG Debug — Retrieved Chunks"
-                ):
+                            st.write(
+                                f"**Document type:** "
+                                f"{citation['document_type']}"
+                            )
 
-                    for index, chunk in enumerate(
-                        message["retrieved_chunks"],
-                        start=1
+                            st.write(
+                                f"**Company ID:** "
+                                f"{citation['company_id']}"
+                            )
+
+                            if citation.get("source"):
+                                st.caption(
+                                    f"Source: {citation['source']}"
+                                )
+
+                            if citation.get("url"):
+                                st.markdown(
+                                    f"[Open source]({citation['url']})"
+                                )
+
+                            st.code(
+                                citation["content"],
+                                language=None
+                            )
+
+                            st.divider()
+
+                sources = message.get("sources", [])
+
+                if sources:
+                    with st.expander("Sources"):
+                        for source in sources:
+                            st.markdown(
+                                f"**{source['document_type'].replace('_', ' ').title()} — "
+                                f"{source['title']}**"
+                            )
+
+                            if source.get("source"):
+                                st.caption(
+                                    f"Source: {source['source']}"
+                                )
+
+                            if source.get("url"):
+                                st.markdown(
+                                    f"[Open source]({source['url']})"
+                                )
+
+                retrieved_chunks = message.get(
+                    "retrieved_chunks",
+                    []
+                )
+
+                if retrieved_chunks:
+                    with st.expander(
+                        "Technical details — RAG retrieval"
                     ):
-
-                        st.markdown(
-                            f"### Result #{index}"
-                        )
-
-                        col1, col2 = st.columns(2)
-
-                        with col1:
-                            st.write(
-                                f"**Product:** "
-                                f"{chunk['product']}"
-                            )
-
-                            st.write(
-                                f"**Category:** "
-                                f"{chunk['category']}"
-                            )
-
-                        with col2:
-                            st.write(
-                                f"**Score:** "
-                                f"{chunk['score']:.4f}"
-                            )
-
-                            st.write(
-                                f"**Chunk ID:** "
-                                f"{chunk['chunk_id']}"
-                            )
-
-                        st.write(
-                            f"**Title:** {chunk['title']}"
-                        )
-
+                        st.markdown("**Original question**")
                         st.code(
-                            chunk["content"],
+                            message.get(
+                                "original_question",
+                                "Not available."
+                            ),
                             language=None
                         )
 
-                        st.divider()
+                        st.markdown("**Rewritten retrieval query**")
+                        st.code(
+                            message.get(
+                                "retrieval_query",
+                                "Not available."
+                            ),
+                            language=None
+                        )
+
+                        st.markdown("**Retrieved chunks**")
+
+                        for index, chunk in enumerate(
+                            retrieved_chunks,
+                            start=1
+                        ):
+                            citation_number = chunk.get(
+                                "citation_number",
+                                index
+                            )
+
+                            st.markdown(
+                                f"### Result #{index} — Citation [{citation_number}]"
+                            )
+
+                            col1, col2 = st.columns(2)
+
+                            with col1:
+                                st.write(
+                                    f"**Company ID:** "
+                                    f"{chunk['company_id']}"
+                                )
+
+                                st.write(
+                                    f"**Document type:** "
+                                    f"{chunk['document_type']}"
+                                )
+
+                            with col2:
+                                st.write(
+                                    f"**Score:** "
+                                    f"{chunk['score']:.4f}"
+                                )
+
+                                st.write(
+                                    f"**Chunk ID:** "
+                                    f"{chunk['chunk_id']}"
+                                )
+
+                            st.write(
+                                f"**Title:** "
+                                f"{chunk['title']}"
+                            )
+
+                            st.code(
+                                chunk["content"],
+                                language=None
+                            )
+
+                            st.divider()
 
 
 # -----------------------------
@@ -194,19 +370,22 @@ for message in st.session_state.messages:
 # -----------------------------
 
 question = st.chat_input(
-    "Ask a Microsoft 365 support question..."
+    "Ask about Miika's experience, skills, projects, or suitability..."
 )
 
 
-# Use example buttons as questions
+# -----------------------------
+# EXAMPLE QUESTION MAPPING
+# -----------------------------
+
 if example_1:
-    question = "How do I share my screen in Microsoft Teams?"
+    question = "Tell me about the company."
 
 elif example_2:
-    question = "How do I set an automatic reply in Outlook?"
+    question = "Tell me about the position."
 
 elif example_3:
-    question = "How can I recover a deleted file from OneDrive?"
+    question = "Tell me how Miika fits the position."
 
 
 # -----------------------------
@@ -225,58 +404,141 @@ if question:
 
     with st.chat_message("assistant"):
 
-        with st.spinner(
-            "Searching Microsoft 365 documentation..."
-        ):
-            result = ask_rag(question)
+        if is_greeting(question):
+
+            answer = (
+                f"Hello {st.session_state.recruiter_name}! 👋\n\n"
+                "I'm Miika's AI Work Application Assistant. "
+                "I can help you learn more about:\n\n"
+                "- Miika's professional experience and technical skills\n"
+                "- The position he has applied for\n"
+                "- How his experience matches the position\n"
+                "- His AI, automation and software development projects\n"
+                "- Relevant technologies, certifications and areas of expertise\n\n"
+                "You can choose one of the example questions above or ask me "
+                "anything related to Miika's application."
+            )
+
+            result = {
+                "answer": answer,
+                "sources": [],
+                "citations": [],
+                "retrieved_chunks": [],
+                "retrieval_query": question
+            }
+
+        else:
+            with st.spinner(
+                "Searching the application knowledge base..."
+            ):
+                result = ask_rag(
+                    question,
+                    company_id=st.session_state.company_id,
+                    history=st.session_state.messages[:-1]
+                )
 
         st.markdown(result["answer"])
 
-        if result["sources"]:
+        citations = result.get("citations", [])
 
-            with st.expander("Sources"):
-
-                for source in result["sources"]:
-
+        if citations:
+            with st.expander("Evidence"):
+                for citation in citations:
                     st.markdown(
-                        f"**{source['product']} — "
+                        f"### [{citation['citation_number']}] "
+                        f"{citation['title']}"
+                    )
+
+                    st.write(
+                        f"**Document type:** "
+                        f"{citation['document_type']}"
+                    )
+
+                    st.write(
+                        f"**Company ID:** "
+                        f"{citation['company_id']}"
+                    )
+
+                    if citation.get("source"):
+                        st.caption(
+                            f"Source: {citation['source']}"
+                        )
+
+                    if citation.get("url"):
+                        st.markdown(
+                            f"[Open source]({citation['url']})"
+                        )
+
+                    st.code(
+                        citation["content"],
+                        language=None
+                    )
+
+                    st.divider()
+
+        if result["sources"]:
+            with st.expander("Sources"):
+                for source in result["sources"]:
+                    st.markdown(
+                        f"**{source['document_type'].replace('_', ' ').title()} — "
                         f"{source['title']}**"
                     )
 
-                    st.markdown(
-                        f"[Open Microsoft Support article]"
-                        f"({source['url']})"
-                    )
+                    if source.get("source"):
+                        st.caption(
+                            f"Source: {source['source']}"
+                        )
 
-        if (
-            st.session_state.show_debug
-            and result["retrieved_chunks"]
-        ):
+                    if source.get("url"):
+                        st.markdown(
+                            f"[Open source]({source['url']})"
+                        )
 
+        if result["retrieved_chunks"]:
             with st.expander(
-                "RAG Debug — Retrieved Chunks"
+                "Technical details — RAG retrieval"
             ):
+                st.markdown("**Original question**")
+                st.code(
+                    question,
+                    language=None
+                )
+
+                st.markdown("**Rewritten retrieval query**")
+                st.code(
+                    result.get(
+                        "retrieval_query",
+                        question
+                    ),
+                    language=None
+                )
+
+                st.markdown("**Retrieved chunks**")
 
                 for index, chunk in enumerate(
                     result["retrieved_chunks"],
                     start=1
                 ):
+                    citation_number = chunk.get(
+                        "citation_number",
+                        index
+                    )
 
                     st.markdown(
-                        f"### Result #{index}"
+                        f"### Result #{index} — Citation [{citation_number}]"
                     )
 
                     col1, col2 = st.columns(2)
 
                     with col1:
                         st.write(
-                            f"**Product:** "
-                            f"{chunk['product']}"
+                            f"**Company ID:** "
+                            f"{chunk['company_id']}"
                         )
 
                         st.write(
-                            f"**Category:** "
-                            f"{chunk['category']}"
+                            f"**Document type:** "
+                            f"{chunk['document_type']}"
                         )
 
                     with col2:
@@ -291,7 +553,8 @@ if question:
                         )
 
                     st.write(
-                        f"**Title:** {chunk['title']}"
+                        f"**Title:** "
+                        f"{chunk['title']}"
                     )
 
                     st.code(
@@ -304,6 +567,12 @@ if question:
     st.session_state.messages.append({
         "role": "assistant",
         "content": result["answer"],
+        "original_question": question,
+        "retrieval_query": result.get(
+            "retrieval_query",
+            question
+        ),
         "sources": result["sources"],
+        "citations": result.get("citations", []),
         "retrieved_chunks": result["retrieved_chunks"]
     })

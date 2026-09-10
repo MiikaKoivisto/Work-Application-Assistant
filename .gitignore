@@ -5,3 +5,7 @@ __pycache__/
 .streamlit/secrets.toml
 
 data/private/
+Cheatsheet/
+test_embeddings/
+test_ingestions/
+test_rag/

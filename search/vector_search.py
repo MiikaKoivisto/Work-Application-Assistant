@@ -45,7 +45,51 @@ search_client = SearchClient(
 )
 
 
-def vector_search(question, top_k=3):
+def build_search_filter(
+    company_id,
+    document_types=None
+):
+    if not company_id:
+        raise ValueError(
+            "company_id is required for company-specific search."
+        )
+
+    safe_company_id = company_id.replace("'", "''")
+
+    # Allow access to:
+    # 1. The recruiter's company-specific documents
+    # 2. Miika's global applicant documents
+
+    search_filter = (
+        f"(company_id eq '{safe_company_id}' "
+        f"or company_id eq 'global')"
+    )
+
+    if document_types:
+        type_filters = []
+
+        for document_type in document_types:
+            safe_type = document_type.replace("'", "''")
+
+            type_filters.append(
+                f"document_type eq '{safe_type}'"
+            )
+
+        search_filter += (
+            " and ("
+            + " or ".join(type_filters)
+            + ")"
+        )
+
+    return search_filter
+
+
+def vector_search(
+    question,
+    company_id,
+    top_k=3,
+    document_types=None
+):
     question_embedding = create_embedding(question)
 
     vector_query = VectorizedQuery(
@@ -57,14 +101,17 @@ def vector_search(question, top_k=3):
     results = search_client.search(
         search_text=None,
         vector_queries=[vector_query],
+        filter=build_search_filter(company_id, document_types),
         select=[
             "chunk_id",
             "title",
-            "product",
-            "category",
+            "company_id",
+            "document_type",
             "content",
             "source",
-            "source_url"
+            "source_url",
+            "filename",
+            "chunk_number"
         ],
         top=top_k
     )
@@ -72,7 +119,12 @@ def vector_search(question, top_k=3):
     return list(results)
 
 
-def hybrid_search(question, top_k=3):
+def hybrid_search(
+    question,
+    company_id,
+    top_k=3,
+    document_types=None
+):
     question_embedding = create_embedding(question)
 
     vector_query = VectorizedQuery(
@@ -84,14 +136,17 @@ def hybrid_search(question, top_k=3):
     results = search_client.search(
         search_text=question,
         vector_queries=[vector_query],
+        filter=build_search_filter(company_id, document_types),
         select=[
             "chunk_id",
             "title",
-            "product",
-            "category",
+            "company_id",
+            "document_type",
             "content",
             "source",
-            "source_url"
+            "source_url",
+            "filename",
+            "chunk_number"
         ],
         top=top_k
     )
@@ -100,21 +155,27 @@ def hybrid_search(question, top_k=3):
 
 
 if __name__ == "__main__":
+    company_id = "company_001"
+
     question = (
-        "My colleague needs to see what I'm doing on my computer. "
-        "How can I show it to them?"
+        "How does Miika's experience match the Senior AI Engineer position?"
     )
 
-    print(f"\nQuestion: {question}\n")
+    print(f"\nCompany: {company_id}")
+    print(f"Question: {question}\n")
 
-    results = hybrid_search(question)
+    results = hybrid_search(
+        question,
+        company_id=company_id,
+        top_k=3
+    )
 
     for index, result in enumerate(results, start=1):
         print("=" * 70)
         print(f"Result #{index}")
         print(f"Score: {result['@search.score']}")
-        print(f"Product: {result['product']}")
-        print(f"Category: {result['category']}")
+        print(f"Company ID: {result['company_id']}")
+        print(f"Document type: {result['document_type']}")
         print(f"Title: {result['title']}")
         print()
         print(result["content"])

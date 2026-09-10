@@ -50,15 +50,16 @@ def chunk_document(document, chunk_size=800):
 
     for index, text in enumerate(text_chunks, start=1):
         chunks.append({
-            "chunk_id": (
-                f"{document['product'].lower()}-"
-                f"{document['category'].lower().replace(' ', '-')}-"
-                f"{index}"
-            ),
+         "chunk_id": (
+    f"{document['company_id'].lower()}-"
+    f"{document['document_type'].lower().replace(' ', '-')}-"
+    f"{document['filename'].lower().replace('.txt', '').replace(' ', '-')}-"
+    f"{index}"
+),
             "chunk_number": index,
             "title": document["title"],
-            "product": document["product"],
-            "category": document["category"],
+            "company_id": document["company_id"],
+            "document_type": document["document_type"],
             "source": document["source"],
             "source_url": document["source_url"],
             "filename": document["filename"],
