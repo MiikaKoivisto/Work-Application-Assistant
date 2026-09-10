@@ -2,6 +2,8 @@ import json
 import re
 from pathlib import Path
 
+import streamlit as st
+
 
 def normalize_company_name(name):
     """
@@ -22,11 +24,13 @@ def normalize_company_name(name):
     return name
 
 
-def load_company_configs(
+def load_company_configs_from_private_folder(
     companies_folder="data/private/companies"
 ):
     """
-    Load every company config.json file from the private data folder.
+    Load company configs from local private files.
+
+    Used for local development where data/private/ exists.
     """
 
     companies = []
@@ -49,15 +53,76 @@ def load_company_configs(
         normalized_aliases = [
             normalize_company_name(alias)
             for alias in aliases
+            if alias
         ]
 
         companies.append({
             "company_id": company_id,
             "aliases": normalized_aliases,
-            "config_path": str(config_path)
+            "source": "private_config",
         })
 
     return companies
+
+
+def load_company_configs_from_streamlit_secrets():
+    """
+    Load company aliases from Streamlit Secrets.
+
+    Expected secrets structure:
+
+    [companies.gofore]
+    aliases = ["Gofore", "Gofore Oyj", "Gofore Plc"]
+
+    [companies.etteplan]
+    aliases = ["Etteplan", "Etteplan Oyj", "Etteplan Plc"]
+    """
+
+    companies = []
+
+    try:
+        secrets_companies = st.secrets.get("companies", {})
+    except Exception:
+        return companies
+
+    for company_id, config in secrets_companies.items():
+        aliases = config.get("aliases", [])
+
+        normalized_aliases = [
+            normalize_company_name(alias)
+            for alias in aliases
+            if alias
+        ]
+
+        # Also allow the company_id itself as valid input.
+        normalized_company_id = normalize_company_name(company_id)
+
+        if normalized_company_id not in normalized_aliases:
+            normalized_aliases.append(normalized_company_id)
+
+        companies.append({
+            "company_id": company_id,
+            "aliases": normalized_aliases,
+            "source": "streamlit_secrets",
+        })
+
+    return companies
+
+
+def load_company_configs():
+    """
+    Load known companies.
+
+    Streamlit Secrets are used first for deployed environments.
+    Local private config files are used as a fallback for local development.
+    """
+
+    secret_companies = load_company_configs_from_streamlit_secrets()
+
+    if secret_companies:
+        return secret_companies
+
+    return load_company_configs_from_private_folder()
 
 
 def match_company(company_name):
@@ -88,13 +153,12 @@ if __name__ == "__main__":
         "GOFORE",
         "Gofore Oyj",
         "Gofore Plc",
-        "  Gofore Oyj  ",
-        "Unknown Company"
+        "Etteplan",
+        "Etteplan Oyj",
+        "Etteplan Plc",
+        "Unknown Company",
     ]
 
     for name in test_names:
         result = match_company(name)
-
-        print(
-            f"{name!r} -> {result}"
-        )
+        print(f"{name!r} -> {result}")
