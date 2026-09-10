@@ -128,7 +128,7 @@ if not st.session_state.authenticated_company:
     )
 
     company_name = st.text_input(
-        "Company"
+        "Company name"
     )
 
     if st.button(
