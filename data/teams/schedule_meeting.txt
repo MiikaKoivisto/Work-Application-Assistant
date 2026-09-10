@@ -1,0 +1,45 @@
+TITLE: Schedule a meeting in Microsoft Teams
+PRODUCT: Teams
+CATEGORY: Meetings
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/teams/meetings/schedule-a-meeting-in-microsoft-teams
+
+---
+
+OVERVIEW
+
+Microsoft Teams allows users to schedule online meetings for a future date and time.
+
+Scheduled meetings can include invited participants and meeting details.
+
+TEAMS CALENDAR
+
+A meeting can be created from the calendar in Microsoft Teams.
+
+Users can select an available time or create a new calendar event and provide the meeting information.
+
+MEETING DETAILS
+
+The meeting can include information such as a title, date and time.
+
+Additional details can be provided to explain the purpose of the meeting or give participants information they need before joining.
+
+INVITE ATTENDEES
+
+People can be invited when the meeting is created.
+
+Invited participants receive information that allows them to join the scheduled meeting.
+
+CALENDAR INTEGRATION
+
+Scheduled Teams meetings can also appear in the user's Outlook calendar when the Microsoft 365 environment provides calendar integration.
+
+This helps users manage their meetings through their normal calendar workflow.
+
+CHANGE A MEETING
+
+A scheduled meeting can be edited later.
+
+For example, the meeting time or other details can be changed when plans change.
+
+Updates can be sent to participants so they receive the revised meeting information.

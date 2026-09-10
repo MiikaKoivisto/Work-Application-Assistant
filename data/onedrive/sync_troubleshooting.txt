@@ -1,0 +1,51 @@
+TITLE: Troubleshoot Microsoft OneDrive synchronization problems
+PRODUCT: OneDrive
+CATEGORY: Sync Troubleshooting
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/onedrive/fix-onedrive-sync-problems
+
+---
+
+OVERVIEW
+
+OneDrive synchronization problems can prevent files from updating correctly between a computer and cloud storage.
+
+Users experiencing sync problems should first determine whether OneDrive is running and whether the device has a working network connection.
+
+CHECK ONEDRIVE
+
+The OneDrive application needs to be running for normal synchronization to occur.
+
+Users can check the OneDrive status to determine whether the application reports a synchronization problem.
+
+CHECK INTERNET CONNECTION
+
+Synchronization requires connectivity to the OneDrive service.
+
+If the device has no working internet connection, changes may not synchronize until connectivity is restored.
+
+SYNC STATUS
+
+OneDrive can display information about the synchronization status of files.
+
+A warning or error can indicate that a particular file or the OneDrive application requires attention.
+
+Users should review available error information when trying to identify the cause of a sync problem.
+
+RESTART ONEDRIVE
+
+Restarting OneDrive can help with some temporary synchronization problems.
+
+The user can close OneDrive and start it again before checking whether synchronization resumes.
+
+FILE PROBLEMS
+
+A synchronization problem may sometimes be associated with a particular file or folder.
+
+Users should review any error information provided by OneDrive to identify the affected content.
+
+GET ADDITIONAL HELP
+
+If basic troubleshooting does not resolve the synchronization problem, additional Microsoft support guidance or organizational IT support may be required.
+
+Users in managed Microsoft 365 environments may have organization-specific policies or configurations that affect OneDrive.

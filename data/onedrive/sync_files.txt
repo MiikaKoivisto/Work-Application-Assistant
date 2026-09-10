@@ -1,0 +1,47 @@
+TITLE: Sync files and folders with Microsoft OneDrive
+PRODUCT: OneDrive
+CATEGORY: File Synchronization
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/onedrive/sync-your-computer-s-files-and-folders-with-onedrive
+
+---
+
+OVERVIEW
+
+OneDrive can synchronize files between a computer and cloud storage.
+
+Synchronization allows users to work with OneDrive files through their computer while keeping the files connected to OneDrive.
+
+FILE EXPLORER
+
+On Windows, synchronized OneDrive files can be accessed through File Explorer.
+
+This allows users to work with cloud-connected files using a familiar file and folder interface.
+
+SYNCHRONIZATION
+
+Changes made to synchronized files can be synchronized with OneDrive when the computer is connected to the service.
+
+Changes made through OneDrive can also become available on synchronized devices.
+
+This allows users to work with current versions of their files across different locations.
+
+MULTIPLE DEVICES
+
+Files stored in OneDrive can be accessed from supported computers, mobile devices and the OneDrive web experience.
+
+This can make files available when users work from more than one device.
+
+LOCAL ONEDRIVE FOLDER
+
+Users can work with files in their local OneDrive folder.
+
+Changes made to synchronized content in this folder are reflected in OneDrive as synchronization occurs.
+
+SYNC STATUS
+
+OneDrive provides synchronization status information.
+
+If synchronization is working normally, changes should be transferred between the computer and OneDrive.
+
+If a problem occurs, users may need to investigate the OneDrive sync status and connection.

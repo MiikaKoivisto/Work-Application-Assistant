@@ -1,0 +1,53 @@
+TITLE: Manage email messages by using rules in Outlook
+PRODUCT: Outlook
+CATEGORY: Inbox Rules
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/outlook/mail/manage-email-messages-by-using-rules-in-outlook
+
+---
+
+OVERVIEW
+
+Outlook rules can automatically process incoming email messages based on conditions defined by the user.
+
+Rules can reduce manual inbox organization by automatically performing actions when matching messages arrive.
+
+CREATE A RULE
+
+A rule contains conditions and actions.
+
+The conditions determine which messages the rule applies to. The actions determine what Outlook should do when a message matches those conditions.
+
+For example, a user can create a rule that identifies messages from a particular sender and automatically moves them into a selected folder.
+
+CONDITIONS
+
+Conditions can identify messages based on properties such as the sender, recipient or subject.
+
+A rule can contain multiple conditions when more specific matching is required.
+
+A message must satisfy the configured conditions for the associated action to occur.
+
+ACTIONS
+
+Actions determine what Outlook does with messages that match a rule.
+
+For example, a matching message can be moved into another folder.
+
+Rules can therefore help users automatically organize messages instead of manually moving every email.
+
+EXCEPTIONS
+
+Rules can include exceptions.
+
+An exception prevents the rule from being applied when a particular situation is true.
+
+This can make a rule more precise when the general conditions would otherwise match messages that should not be processed.
+
+MANAGING RULES
+
+Existing rules can be reviewed and changed.
+
+Rules can be enabled, disabled, edited or deleted when the user's requirements change.
+
+When several rules exist, their configuration and order can affect how messages are processed.

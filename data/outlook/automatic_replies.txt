@@ -1,0 +1,39 @@
+TITLE: Set up automatic replies in Outlook
+PRODUCT: Outlook
+CATEGORY: Automatic Replies
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/outlook/mail/how-to-set-up-out-of-office-automatic-replies-in-outlook
+
+---
+
+OVERVIEW
+
+Automatic replies in Outlook can notify people that you are unavailable and may not respond immediately.
+
+This feature is commonly used for vacations, business trips, holidays and other periods when a user is away from work.
+
+AUTOMATIC REPLY PERIOD
+
+Users can configure automatic replies for a specific period of time.
+
+A start and end time can be specified so that Outlook automatically begins and stops sending the out-of-office response.
+
+This is useful when the user already knows when they will return.
+
+REPLY MESSAGE
+
+The automatic reply can contain information explaining that the user is unavailable.
+
+The message can include information such as the expected return date or another person to contact while the user is away.
+
+INTERNAL AND EXTERNAL REPLIES
+
+Different automatic reply messages can be configured for people inside and outside the organization.
+
+This allows users to provide different information to coworkers and external contacts.
+
+MANAGING AUTOMATIC REPLIES
+
+Automatic replies can be changed or disabled when they are no longer required.
+
+If a time period was configured, Outlook can automatically stop sending the replies when the specified period ends.

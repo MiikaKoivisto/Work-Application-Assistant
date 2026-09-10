@@ -1,0 +1,45 @@
+TITLE: Manage notifications in Microsoft Teams
+PRODUCT: Teams
+CATEGORY: Notifications
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/teams/teams-channels/manage-channel-notifications-in-microsoft-teams
+
+---
+
+OVERVIEW
+
+Microsoft Teams uses notifications to inform users about activity that may require their attention.
+
+Users can adjust notification behavior to reduce unnecessary interruptions or make important activity easier to notice.
+
+NOTIFICATION SETTINGS
+
+Teams provides settings for controlling notifications.
+
+Users can review notification preferences and decide how they want to be notified about different types of activity.
+
+CHANNEL NOTIFICATIONS
+
+Notifications can be managed for Teams channels.
+
+A user may want notifications for important channel activity while reducing notifications from channels that are less relevant.
+
+Different channels can therefore have different notification behavior.
+
+REDUCING NOTIFICATIONS
+
+Users who receive too many Teams notifications can change their notification preferences.
+
+Reducing less important notifications can make it easier to notice messages and activity that require attention.
+
+IMPORTANT ACTIVITY
+
+Users should consider which Teams activity is important for their work before disabling notifications.
+
+Notification settings can be adjusted so that important communication remains visible while less useful alerts are reduced.
+
+MANAGING PREFERENCES
+
+Notification preferences can be changed again later.
+
+This allows users to adapt Teams notifications when their responsibilities, teams or communication needs change.

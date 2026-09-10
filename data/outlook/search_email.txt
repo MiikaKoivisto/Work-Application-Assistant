@@ -1,0 +1,49 @@
+TITLE: Search for email in Outlook
+PRODUCT: Outlook
+CATEGORY: Email Search
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/office/search-mail-and-people-in-outlook-com-88108edf-028e-4306-b87e-7400bbb40aa7
+
+---
+
+OVERVIEW
+
+Outlook provides search functionality for finding email messages and other information.
+
+Users can enter words or phrases into the search box to locate relevant messages.
+
+SEARCH FOR EMAIL
+
+A user can search using information they remember about an email.
+
+Useful search information can include a sender's name, an email address, words from the subject or words contained in the message.
+
+More specific search terms can help narrow the results when many messages are found.
+
+SEARCH BY SENDER
+
+Users can search for messages associated with a particular sender.
+
+A sender's name or email address can help identify messages received from that person.
+
+Additional search terms can be used when the sender has sent many messages.
+
+FILTER RESULTS
+
+Search results can be narrowed using filters.
+
+Filters can help users find messages based on properties such as the sender, date or whether the message contains an attachment.
+
+This is particularly useful when a general search produces too many results.
+
+FIND EMAIL WITH ATTACHMENTS
+
+Search can help users locate messages containing attachments.
+
+This is useful when a user remembers receiving a file or document but cannot remember exactly when the email arrived.
+
+REFINE A SEARCH
+
+If the expected message does not appear, users can change their search terms or use additional filters.
+
+Adding information that is specific to the missing message can reduce irrelevant search results.

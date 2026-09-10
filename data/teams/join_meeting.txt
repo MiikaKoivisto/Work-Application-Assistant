@@ -1,0 +1,51 @@
+TITLE: Join a meeting in Microsoft Teams
+PRODUCT: Teams
+CATEGORY: Joining Meetings
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/teams/meetings/join-a-meeting-in-microsoft-teams
+
+---
+
+OVERVIEW
+
+Microsoft Teams provides several ways to join an online meeting.
+
+The available method depends on how the meeting invitation was received and whether the user is using Teams.
+
+JOIN FROM A CALENDAR
+
+A scheduled meeting can be opened from the Teams calendar.
+
+When the meeting is ready, the user can select the option to join.
+
+The user may be shown a pre-join screen before entering the meeting.
+
+JOIN FROM A MEETING LINK
+
+Teams meeting invitations can contain a link for joining the meeting.
+
+Opening the meeting link starts the process of connecting to the meeting.
+
+Depending on the environment, the user may be able to join using the Teams application or another supported experience.
+
+PRE-JOIN SETTINGS
+
+Before entering a meeting, users can review available audio and video settings.
+
+For example, a user may choose whether the camera or microphone should be enabled before joining.
+
+Reviewing these settings can prevent unwanted audio or video from being transmitted when entering the meeting.
+
+MEETING LOBBY
+
+Some meetings use a lobby.
+
+A participant may need to wait in the lobby until someone in the meeting allows them to enter.
+
+Lobby behavior depends on the meeting settings configured by the organizer or organization.
+
+TROUBLE JOINING
+
+If a user cannot join a meeting, they should check that they are using the correct meeting invitation or link.
+
+They should also verify their internet connection and the audio or video devices they intend to use.

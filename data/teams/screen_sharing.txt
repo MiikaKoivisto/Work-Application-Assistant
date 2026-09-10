@@ -1,0 +1,45 @@
+TITLE: Share your screen in Microsoft Teams
+PRODUCT: Teams
+CATEGORY: Screen Sharing
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/teams/chat/share-your-screen-in-a-chat-in-microsoft-teams
+
+---
+
+OVERVIEW
+
+Microsoft Teams allows users to share content with other participants.
+
+Screen sharing is useful when another person needs to see an application, presentation, document or other content displayed on the user's computer.
+
+SHARE A SCREEN
+
+A user can start sharing from the Teams sharing controls.
+
+The available sharing options depend on the Teams experience and the content available on the device.
+
+ENTIRE SCREEN
+
+Users can share an entire screen.
+
+When an entire screen is shared, participants can see the content displayed on that screen while sharing is active.
+
+This can be useful when the presenter needs to move between several applications.
+
+SHARE A WINDOW
+
+Users can choose to share a specific application window instead of the entire screen.
+
+Sharing only a window can help prevent participants from seeing unrelated applications or other content on the desktop.
+
+DURING SHARING
+
+While sharing content, the presenter can continue communicating with the other participants.
+
+The presenter should be aware of what information is visible when sharing an entire screen.
+
+STOP SHARING
+
+Screen sharing can be stopped when the presenter no longer wants other participants to see the shared content.
+
+After sharing is stopped, participants no longer receive the presenter's shared screen or window.

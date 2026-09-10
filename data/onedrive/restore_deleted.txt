@@ -1,0 +1,45 @@
+TITLE: Restore deleted files or folders in Microsoft OneDrive
+PRODUCT: OneDrive
+CATEGORY: File Recovery
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/onedrive/restore-deleted-files-or-folders-in-onedrive
+
+---
+
+OVERVIEW
+
+Files or folders deleted from OneDrive may be recoverable from the OneDrive recycle bin.
+
+The recycle bin provides a way to restore content that was deleted accidentally.
+
+RECYCLE BIN
+
+Deleted OneDrive items can be placed in the recycle bin instead of immediately disappearing permanently.
+
+Users can open the OneDrive recycle bin to look for files or folders they want to recover.
+
+FIND A DELETED ITEM
+
+The user should locate the required file or folder in the recycle bin.
+
+The item can then be selected for recovery.
+
+RESTORE AN ITEM
+
+A deleted item can be restored from the recycle bin when it is still available there.
+
+After restoration, the file or folder becomes available again in OneDrive.
+
+RECOVERY LIMITATIONS
+
+Deleted content is not necessarily retained indefinitely.
+
+Retention behavior can depend on the type of account and the organization's Microsoft 365 configuration.
+
+Users should therefore attempt to recover accidentally deleted files as soon as possible.
+
+ITEM NOT AVAILABLE
+
+If the required file is no longer available in the recycle bin, normal recycle-bin restoration may not be possible.
+
+In a managed organization, users may need to contact their IT support team when important content cannot be recovered through the available OneDrive recovery options.

@@ -1,0 +1,45 @@
+TITLE: Add and change an email signature in Outlook
+PRODUCT: Outlook
+CATEGORY: Email Signatures
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/outlook/mail/how-to-add-and-change-an-email-signature-in-outlook
+
+---
+
+OVERVIEW
+
+Outlook allows users to create signatures that can be added to email messages.
+
+A signature can provide recipients with information about the sender and can help maintain a consistent format for business email.
+
+SIGNATURE CONTENT
+
+An email signature can contain text such as a person's name, job title and contact information.
+
+Signatures can also contain links, images, logos and other formatted content.
+
+CREATE A SIGNATURE
+
+Users can create and save an email signature in Outlook.
+
+Multiple signatures can be created when different signatures are needed for different purposes.
+
+For example, a user might have one signature for internal communication and another for customers.
+
+AUTOMATIC SIGNATURES
+
+A signature can be configured to appear automatically in new email messages.
+
+Users can also configure whether a signature should automatically appear in replies and forwarded messages.
+
+INSERTING A SIGNATURE
+
+A saved signature can be inserted manually when composing an email.
+
+This allows the user to choose which signature is appropriate for a particular message.
+
+MANAGING SIGNATURES
+
+Existing signatures can be changed when contact information or other details need to be updated.
+
+Users can also create additional signatures or remove signatures that are no longer needed.

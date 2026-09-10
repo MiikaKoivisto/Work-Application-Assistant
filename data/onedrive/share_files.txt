@@ -1,0 +1,47 @@
+TITLE: Share files and folders in Microsoft OneDrive
+PRODUCT: OneDrive
+CATEGORY: File Sharing
+SOURCE: Microsoft Support
+SOURCE_URL: https://support.microsoft.com/en-us/onedrive/share-files-and-folders-in-microsoft-onedrive
+
+---
+
+OVERVIEW
+
+OneDrive allows users to share files and folders with other people.
+
+Files stored in OneDrive are not automatically available to everyone and can be shared when collaboration is required.
+
+SHARE AN ITEM
+
+A user can select a file or folder in OneDrive and use the sharing options.
+
+Sharing can provide another person with access to the selected content without requiring the user to send a separate copy of the file.
+
+SHARING LINKS
+
+OneDrive can create a link that provides access to shared content.
+
+The link can be sent to the people who need access.
+
+Available link settings can depend on the user's organization and its Microsoft 365 configuration.
+
+SPECIFIC PEOPLE
+
+Access can be granted to specific people.
+
+This can provide more control over who is intended to access the shared file or folder.
+
+VIEW AND EDIT PERMISSIONS
+
+Sharing permissions can determine what another person is allowed to do.
+
+For example, a person may receive permission to view content or permission that allows editing.
+
+Users should choose permissions based on whether the recipient only needs to read the content or needs to collaborate on it.
+
+MANAGE SHARING
+
+Sharing settings can be reviewed later.
+
+Access can be changed when collaboration requirements change or when another person should no longer have the same level of access.
