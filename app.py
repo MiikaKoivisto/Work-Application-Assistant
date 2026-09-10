@@ -21,8 +21,8 @@ if "authenticated" not in st.session_state:
 
 
 def check_access_code():
-    entered_code = st.session_state.get("access_code", "")
-    expected_code = get_setting("APP_ACCESS_CODE")
+    entered_code = str(st.session_state.get("access_code", "")).strip()
+    expected_code = str(get_setting("APP_ACCESS_CODE")).strip()
 
     if expected_code and hmac.compare_digest(
         entered_code,
