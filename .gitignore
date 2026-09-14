@@ -9,3 +9,4 @@ Cheatsheet
 test_embeddings/
 test_ingestions/
 test_rag/
+secrets.toml/

@@ -10,6 +10,7 @@ def detect_document_types(question, company_id=None):
 
     # Applicant + position comparison
     match_keywords = [
+        # English
         "fit",
         "match",
         "suitable",
@@ -18,31 +19,59 @@ def detect_document_types(question, company_id=None):
         "qualification",
         "good candidate",
         "why miika",
-        "hire miika"
+        "hire miika",
+        # Finnish
+        "sopii",
+        "sopivuus",
+        "soveltuu",
+        "soveltuvuus",
+        "sopiva",
+        "pätevä",
+        "pätevyys",
+        "hyvä hakija",
+        "hyvä kandidaatti",
+        "miksi miika",
+        "palkata miika",
+        "vastaa tehtävää",
+        "vastaa vaatimuksia",
     ]
 
     # Applicant projects
     project_keywords = [
+        # English
         "project",
         "projects",
         "portfolio",
         "rag",
         "assistant",
-        "github"
+        "github",
+        # Finnish
+        "projekti",
+        "projektit",
+        "portfolio",
+        "avustaja",
     ]
 
     # Applicant certifications
     certification_keywords = [
+        # English
         "certification",
         "certifications",
         "certificate",
         "certificates",
         "credential",
-        "credentials"
+        "credentials",
+        # Finnish
+        "sertifikaatti",
+        "sertifikaatit",
+        "todistus",
+        "todistukset",
+        "pätevyystodistus",
     ]
 
     # Applicant skills / technologies
     skill_keywords = [
+        # English
         "skill",
         "skills",
         "technology",
@@ -56,11 +85,23 @@ def detect_document_types(question, company_id=None):
         "power apps",
         "azure",
         "ai",
-        "automation"
+        "automation",
+        # Finnish
+        "taito",
+        "taidot",
+        "osaaminen",
+        "teknologia",
+        "teknologiat",
+        "tekninen",
+        "rajapinta",
+        "rajapinnat",
+        "tekoäly",
+        "automaatio",
     ]
 
     # Applicant CV / professional background
     applicant_keywords = [
+        # English
         "miika",
         "experience",
         "background",
@@ -68,26 +109,51 @@ def detect_document_types(question, company_id=None):
         "work experience",
         "professional experience",
         "previous role",
-        "previous job"
+        "previous job",
+        # Finnish
+        "kokemus",
+        "tausta",
+        "koulutus",
+        "työkokemus",
+        "ammatillinen kokemus",
+        "aiempi rooli",
+        "aiempi työ",
+        "edellinen työ",
     ]
 
     # Position
     position_keywords = [
+        # English
         "position",
         "role",
         "job",
         "responsibilities",
         "requirements",
-        "job description"
+        "job description",
+        # Finnish
+        "tehtävä",
+        "rooli",
+        "työpaikka",
+        "vastuut",
+        "vaatimukset",
+        "työtehtävä",
+        "tehtävänkuva",
     ]
 
     # Company
     company_keywords = [
+        # English
         "company",
         "organization",
         "business",
         "employer",
         "about the company",
+        # Finnish
+        "yritys",
+        "organisaatio",
+        "liiketoiminta",
+        "työnantaja",
+        "kerro yrityksestä",
     ]
 
     # Check more specific intents first
@@ -98,7 +164,7 @@ def detect_document_types(question, company_id=None):
             "applicant_cv",
             "applicant_skills",
             "applicant_projects",
-            "applicant_certifications"
+            "applicant_certifications",
         ]
 
     if any(keyword in question_lower for keyword in project_keywords):
@@ -111,7 +177,7 @@ def detect_document_types(question, company_id=None):
         return [
             "applicant_skills",
             "applicant_cv",
-            "applicant_projects"
+            "applicant_projects",
         ]
 
     if any(keyword in question_lower for keyword in applicant_keywords):
@@ -120,7 +186,7 @@ def detect_document_types(question, company_id=None):
             "applicant_skills",
             "applicant_projects",
             "applicant_certifications",
-            "applicant_match"
+            "applicant_match",
         ]
 
     if any(keyword in question_lower for keyword in position_keywords):
@@ -141,27 +207,30 @@ def detect_document_types(question, company_id=None):
     return None
 
 
-def ask_rag(question, company_id, history=None):
+def ask_rag(question, company_id, history=None, language="en"):
     if history is None:
         history = []
+
+    language = normalize_language(language)
 
     # Route using the user's original intent.
     document_types = detect_document_types(
         question,
-        company_id=company_id
+        company_id=company_id,
     )
 
     # Rewrite follow-up questions into a standalone retrieval query.
     retrieval_query = rewrite_query(
         question,
-        history=history
+        history=history,
+        language=language,
     )
 
     results = hybrid_search(
         retrieval_query,
         company_id=company_id,
         top_k=4,
-        document_types=document_types
+        document_types=document_types,
     )
 
     # Remove results that are probably unrelated.
@@ -173,15 +242,23 @@ def ask_rag(question, company_id, history=None):
 
     # Nothing relevant was found.
     if not relevant_results:
-        return {
-            "answer": (
+        if language == "fi":
+            no_results_answer = (
+                "En löytänyt hakemuksen tietopohjasta riittävästi "
+                "olennaista tietoa vastatakseni tähän kysymykseen."
+            )
+        else:
+            no_results_answer = (
                 "I couldn't find enough relevant information "
                 "in the application knowledge base to answer that question."
-            ),
+            )
+
+        return {
+            "answer": no_results_answer,
             "sources": [],
             "citations": [],
             "retrieved_chunks": [],
-            "retrieval_query": retrieval_query
+            "retrieval_query": retrieval_query,
         }
 
     # Build numbered evidence blocks.
@@ -213,10 +290,16 @@ Chunk ID: {result['chunk_id']}
             "document_type": result["document_type"],
             "source": result["source"],
             "url": result.get("source_url"),
-            "content": result["content"]
+            "content": result["content"],
         })
 
     context = "\n\n---\n\n".join(context_parts)
+
+    answer_language_instruction = (
+        "Answer in Finnish. Use natural, professional Finnish."
+        if language == "fi"
+        else "Answer in English. Use natural, professional English."
+    )
 
     messages = [
         {
@@ -227,28 +310,35 @@ Chunk ID: {result['chunk_id']}
                 "the position, the company, and how the applicant's experience "
                 "relates to the position. "
 
-                "Answer using only the information provided in the retrieved "
-                "context. Do not invent qualifications, professional experience, "
-                "skills, certifications, responsibilities, or achievements. "
+                f"{answer_language_instruction} "
 
-                "Clearly distinguish between professional experience, personal "
-                "projects, independent learning, and areas the applicant is "
-                "currently developing. "
+               "Present the applicant in a constructive, recruiter-facing way. "
+"For general questions about suitability, fit, qualifications, or why the "
+"applicant could be a good candidate, focus on demonstrated strengths, "
+"relevant experience, transferable skills, projects, and alignment with "
+"the position. "
 
-                "Every factual claim that comes from the retrieved context must "
-                "include an inline citation using the evidence number, for example "
-                "[1] or [2]. Use only citation numbers that appear in the provided "
-                "context. Place citations immediately after the claim they support. "
-                "If one claim is supported by multiple evidence blocks, cite each "
-                "relevant block, for example [1][3]. "
-                "Do not create a separate references list in the answer. "
+"Do NOT proactively mention missing qualifications, experience gaps, "
+"seniority gaps, weaknesses, shortcomings, or reasons not to hire the "
+"applicant in a general suitability answer. The absence of evidence for "
+"a qualification is not itself a reason to mention that qualification. "
 
-                "If the context does not contain enough information to answer "
-                "the question, say so clearly. "
+"Only discuss weaknesses, missing requirements, limitations, or gaps when "
+"the user explicitly asks about them, for example by asking what the "
+"applicant lacks, what requirements are not met, what concerns there are, "
+"or what areas still need development. "
 
-                "Be professional, concise, and factual. "
-                "Do not exaggerate the applicant's suitability for the position."
-            )
+"If the user explicitly asks about shortcomings or missing requirements, "
+"answer truthfully using only the retrieved evidence and use neutral, "
+"constructive wording. Never invent experience or imply that the applicant "
+"has a qualification that is not supported by the context. "
+
+"When answering a general fit question, conclude by summarizing the strongest "
+"reasons the applicant is relevant to the position. Do not end the answer "
+"with a caveat about missing experience or a hypothetical reason not to "
+"hire the applicant."
+
+            ),
         },
         {
             "role": "user",
@@ -260,8 +350,8 @@ CONTEXT:
 QUESTION:
 
 {question}
-""".strip()
-        }
+""".strip(),
+        },
     ]
 
     answer = ask_ai(messages)
@@ -282,7 +372,7 @@ QUESTION:
                 "company_id": result["company_id"],
                 "document_type": result["document_type"],
                 "source": result["source"],
-                "url": result.get("source_url")
+                "url": result.get("source_url"),
             })
 
             seen_sources.add(source_key)
@@ -298,7 +388,7 @@ QUESTION:
             "title": result["title"],
             "company_id": result["company_id"],
             "document_type": result["document_type"],
-            "content": result["content"]
+            "content": result["content"],
         })
 
     return {
@@ -306,19 +396,26 @@ QUESTION:
         "sources": sources,
         "citations": citations,
         "retrieved_chunks": retrieved_chunks,
-        "retrieval_query": retrieval_query
+        "retrieval_query": retrieval_query,
     }
 
 
-def rewrite_query(question, history=None):
+def rewrite_query(question, history=None, language="en"):
     if not history:
         return question
 
+    language = normalize_language(language)
     recent_history = history[-4:]
 
     history_text = "\n".join(
         f"{message['role']}: {message['content']}"
         for message in recent_history
+    )
+
+    output_language_instruction = (
+        "Return the rewritten search query in Finnish."
+        if language == "fi"
+        else "Return the rewritten search query in English."
     )
 
     messages = [
@@ -333,6 +430,7 @@ def rewrite_query(question, history=None):
                 "Preserve the user's original intent. "
                 "Do not answer the question. "
                 "Do not invent information. "
+                f"{output_language_instruction} "
                 "Return only the rewritten search query."
             ),
         },
@@ -346,3 +444,12 @@ def rewrite_query(question, history=None):
     ]
 
     return ask_ai(messages).strip()
+
+
+def normalize_language(language):
+    normalized = str(language or "en").strip().lower()
+
+    if normalized in {"fi", "fin", "finnish", "suomi"}:
+        return "fi"
+
+    return "en"
