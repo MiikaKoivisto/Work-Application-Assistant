@@ -77,7 +77,7 @@ def load_company_configs_from_streamlit_secrets():
     [companies.etteplan]
     aliases = ["Etteplan", "Etteplan Oyj", "Etteplan Plc"]
     """
-
+    
     companies = []
 
     try:
