@@ -444,7 +444,6 @@ AZURE_SEARCH_INDEX=
 AZURE_SEARCH_API_KEY=
 ```
 
-Never commit real credentials to Git.
 
 ---
 
