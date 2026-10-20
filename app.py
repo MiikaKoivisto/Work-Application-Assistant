@@ -3,7 +3,7 @@ import hmac
 import streamlit as st
 from dotenv import load_dotenv
 
-from company_matcher import match_company
+from job_fetcher import fetch_job_description
 from rag import ask_rag
 
 load_dotenv()
@@ -60,6 +60,12 @@ if "company_id" not in st.session_state:
 
 if "authenticated_company" not in st.session_state:
     st.session_state.authenticated_company = False
+
+if "job_context" not in st.session_state:
+    st.session_state.job_context = ""
+
+if "job_url" not in st.session_state:
+    st.session_state.job_url = ""
 
 
 
@@ -288,16 +294,12 @@ if not st.session_state.authenticated_company:
             st.error(t("incorrect_code"))
 
         else:
-            company_id = match_company(company_name)
-
-            if company_id is None:
-                st.error(t("unknown_company", company=company_name))
-            else:
-                st.session_state.recruiter_name = recruiter_name
-                st.session_state.company_name = company_name
-                st.session_state.company_id = company_id
-                st.session_state.authenticated_company = True
-                st.rerun()
+            st.session_state.recruiter_name = recruiter_name
+            st.session_state.company_name = company_name
+            # Only globally indexed applicant documents are accessible.
+            st.session_state.company_id = "global"
+            st.session_state.authenticated_company = True
+            st.rerun()
 
     st.stop()
 
@@ -340,7 +342,7 @@ with st.sidebar:
     st.markdown(
         """
         - Azure OpenAI
-        - Azure AI Search
+        - FAISS + BM25
         - Hybrid retrieval
         - Vector embeddings
         - Metadata filtering
@@ -367,6 +369,64 @@ st.title(t("app_title"))
 st.caption(
     t("header_welcome", name=st.session_state.recruiter_name)
 )
+
+st.divider()
+
+# -----------------------------
+# JOB ADVERTISEMENT (SESSION ONLY)
+# -----------------------------
+if st.session_state.language == "fi":
+    st.subheader("Työpaikkailmoitus")
+    st.caption("Lisää julkisen työpaikkailmoituksen URL tai liitä ilmoituksen teksti. Tietoja käytetään vain tässä istunnossa.")
+    url_label = "Työpaikkailmoituksen URL"
+    paste_label = "Tai liitä työpaikkailmoituksen teksti"
+    save_label = "Käytä työpaikkailmoitusta"
+    active_label = "Työpaikkailmoitus ladattu"
+    missing_job_label = "Lisää ensin työpaikkailmoitus ennen keskustelua."
+else:
+    st.subheader("Job advertisement")
+    st.caption("Enter a public job posting URL or paste its text. The description is used only for this session.")
+    url_label = "Job advertisement URL"
+    paste_label = "Or paste the job description"
+    save_label = "Use this job advertisement"
+    active_label = "Job advertisement loaded"
+    missing_job_label = "Please add a job advertisement before starting the chat."
+
+with st.form("job_advertisement_form"):
+    entered_url = st.text_input(url_label, value=st.session_state.job_url, placeholder="https://...")
+    pasted_job = st.text_area(paste_label, height=150, placeholder="Paste the full job description here if the website blocks extraction.")
+    job_submitted = st.form_submit_button(save_label, type="primary")
+
+if job_submitted:
+    if pasted_job.strip():
+        new_context = pasted_job.strip()[:24000]
+        resolved_url = entered_url.strip()
+    elif entered_url.strip():
+        try:
+            with st.spinner("Reading job advertisement..."):
+                new_context, resolved_url = fetch_job_description(entered_url)
+        except ValueError as exc:
+            st.error(str(exc))
+            st.stop()
+    else:
+        st.warning(missing_job_label)
+        st.stop()
+
+    if len(new_context) < 80:
+        st.warning("The job description is too short. Please include the requirements and responsibilities.")
+        st.stop()
+    st.session_state.job_context = new_context
+    st.session_state.job_url = resolved_url
+    st.session_state.messages = []
+    st.rerun()
+
+if st.session_state.job_context:
+    st.success(f"{active_label} ({len(st.session_state.job_context):,} characters)")
+    with st.expander("View job description" if st.session_state.language == "en" else "Näytä työpaikkailmoitus"):
+        st.text(st.session_state.job_context)
+else:
+    st.info(missing_job_label)
+    st.stop()
 
 st.divider()
 
@@ -627,6 +687,7 @@ if question:
                     company_id=st.session_state.company_id,
                     history=st.session_state.messages[:-1],
                     language=st.session_state.language,
+                    job_context=st.session_state.job_context,
                 )
 
         st.markdown(result["answer"])
